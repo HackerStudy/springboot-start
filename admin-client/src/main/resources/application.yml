@@ -1,0 +1,57 @@
+####################################
+# server 服务端相关的配置
+# server - tomcat 相关常用配置
+####################################
+spring:
+  #测试环境和生产环境之间的配置文件的切换
+  profiles:
+    active: @profileActive@
+#    active: dev
+  application:
+    name: admin-client
+  devtools:
+    livereload:
+      port: 35731
+  boot:
+    admin:
+      client:
+        url: http://localhost:8082
+        username: admin
+        password: 123456
+        instance:
+          name: admin-client
+          #client地址
+          service-base-url: http://localhost:${server.port}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+server:
+  port: 8080
+  servlet:
+#    context-path: /admin-client # 配置context-path,一般来说这个配置在正式发布的时候不配置
+    session:
+      timeout: 60
+  tomcat:
+    max-threads: 250 # tomcat最大线程数，默认为200
+    uri-encoding: UTF-8
+  # UTF-8编码
+  http:
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+  #  error:
+  #    path: /error # 错误页，指定错误发生时，跳转的url -->BasicErrorController
+#  address: 192.168.68.72 # 该服务绑定ip地址，启动服务器时如本机不是该ip地址则抛出异常启动失败，只有特殊需求的情况下才配置，具体根据各自的业务需求来设置
+#    basedir: E:/springboot-tomcat-tmp # 存放tomcat的日志、dump等文件的临时文件夹，默认为系统的tmp文件夹 （如：C:\Users\Shanhy\AppData\Local\Temp）
+#    accesslog:      # 打开tomcat的Access日志，并可以设置日志格式的方法
+#      enabled: true
+#      pattern:
+#      directory:  # accesslog目录,默认在basedir/logs
+
+hello: Hello admin-client

@@ -1,0 +1,31 @@
+#####################
+## k:v模式
+#####################
+
+# "":双引号和'':单引号
+sname: "张三 /n list"
+tname: '张三 /n list'
+
+# 对象
+user:
+  id: 1
+  name: lisi
+  birthday: 2019-04-23
+
+#行内写法
+user2: {id: 2,name: lisi,birthday: 2019-04-23}
+
+# 数组和list、set集合
+list:
+  - 1
+  - 2
+  - 3
+
+#行内写法
+list2: [1,2,3]
+
+# 随机数和占位符
+user3:
+  id: ${random.uuid}
+  name: ${user.name}
+

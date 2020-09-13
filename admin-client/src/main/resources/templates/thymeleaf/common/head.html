@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>公共头部文件</title>
+</head>
+<body>
+
+<!--头部片段-->
+<div th:fragment="language">
+    <!--要显示的语言的配置文件-->
+    <select id="language" name="language">
+        <option>-- 请选择 --</option>
+        <option value="1">en</option>
+        <option value="2">zh</option>
+    </select>
+</div>
+
+</body>
+</html>

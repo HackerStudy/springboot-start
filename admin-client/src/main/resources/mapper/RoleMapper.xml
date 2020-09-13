@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerstudy.adminclient.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.hackerstudy.adminclient.pojo.Role" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="authorization" property="authorization" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- ==================定义sql片段==============
+  sql:是sql片段标签属性id是该片段的唯一标识 -->
+  <sql id="Base_Column_List" >
+      id,name,authorization
+    </sql>
+
+  <!--<insert id="saveRole" parameterType="com.hackerstudy.springboot-startt.pojo.Role">-->
+    <!--insert into role-->
+    <!--<trim prefix="(" suffix=")" suffixOverrides="," >-->
+      <!--<if test="id != null" >-->
+        <!--id,-->
+      <!--</if>-->
+      <!--<if test="name != null" >-->
+        <!--name,-->
+      <!--</if>-->
+      <!--<if test="authorization!= null" >-->
+        <!--authorization,-->
+      <!--</if>-->
+    <!--</trim>-->
+    <!--<trim prefix="values (" suffix=")" suffixOverrides="," >-->
+      <!--<if test="id != null" >-->
+        <!--#{id,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="name != null" >-->
+        <!--#{name,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="authorization != null" >-->
+        <!--#{authorization,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</trim>-->
+  <!--</insert>-->
+
+  <insert id="saveRole" parameterType="com.hackerstudy.adminclient.pojo.Role">
+    insert into role (name,authorization) value(#{name,jdbcType=VARCHAR},#{authorization,jdbcType=VARCHAR})
+  </insert>
+</mapper>

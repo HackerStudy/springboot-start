@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: admin-server
+  devtools:
+    livereload:
+      port: 35730
+  boot:
+    admin:
+#      context-path: monitor
+      ui:
+        title: SpringBootAdmin-Server
+      notify:
+        mail:
+          from: abc1791133899@qq.com
+          to: 1791133899@qq.com
+          enabled: true
+  security:
+    user:
+      name: "admin"
+      password: "123456"
+  mail:
+    host: smtp.qq.com
+    username: abc1791133899@qq.com
+    password: teqsfjdlgbmkdfih
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  thymeleaf :
+    checkTemplateLocation: false
+server:
+  port: 8082

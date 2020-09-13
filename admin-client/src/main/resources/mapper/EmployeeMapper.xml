@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hackerstudy.adminclient.dao.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.hackerstudy.adminclient.pojo.Employee">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="last_name" property="lastName" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
+        <result column="d_id" property="dId" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="EmployeeVoMap" type="com.hackerstudy.adminclient.vo.EmployeeVo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="last_name" property="lastName" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
+        <result column="department_name" property="department" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!-- ==================定义sql片段==============
+    sql:是sql片段标签属性id是该片段的唯一标识 -->
+    <sql id="Base_Column_List">
+      id,last_name,email,gender,d_id
+    </sql>
+
+    <select id="getEmployees" resultMap="EmployeeVoMap">
+        select e.id,e.last_name,e.email,e.gender,d.department_name
+        from employee e inner join department d on e.d_id = d.id
+    </select>
+
+</mapper>

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>WebSocket</title>
+    <script th:src="@{/static/jquery/jquery-3.3.1.min.js}"></script>
+</head>
+
+<body>
+<div style="margin: auto;text-align: center">
+    <h2>智慧聊天室</h2>
+</div>
+<div id="message" style="
+    width: 633px;
+    height: 245px;
+    margin-left: 24.8%;
+    border: 1px solid #9E9E9E;
+    padding-bottom: 20px;
+    overflow-y:auto;
+    overflow-x:auto;
+">
+</div>
+<div id="sendMessage" style="
+    width: 50%;
+    height: 50%;
+    margin-left: 24.8%;
+    border: 1px solid #9E9E9E;
+">
+    <select id="onLineUsers" style="height: 22px">
+        <option value="-1">All</option>
+    </select>
+    <input id="text" type="text" style="width: 447px;"/>
+    <button style="margin-left: 2px" onclick="send()">Send</button>
+    <button onclick="closeWebSocket()">Close</button>
+</div>
+<div id="onlineUser" style="
+    width: 15%;
+    position: absolute;
+    top: 71px;
+    right: 129px;
+    height: 50%;
+    border: 1px solid #9E9E9E;
+">
+    <div style="margin: auto;text-align: center">
+        <h4>聊天室人员</h4>
+    </div>
+
+    <div>
+        <ul th:each="user:${ChatRoomUser}">
+            <li th:id="${user.id}" th:text="${user.name}+': 离线'"></li>
+        </ul>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    var userId = [[${userId}]];
+    var websocketIP = [[${websocketIP}]];
+    var websocket = null;
+    var chatRoomUser;
+    $.ajax({
+        async: false,    //表示请求是否异步处理
+        type: "get",    //请求类型
+        url: "/adminclient/user/getAllUser",//请求的 URL地址
+        dataType: "json",//返回的数据类型
+        success: function (data) {
+            chatRoomUser = data.data;
+        },
+        error: function (data) {
+            alert(data.result);
+        }
+    });
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window) {
+        websocket = new WebSocket(websocketIP + userId);
+    }
+    else {
+        alert('Not support websocket')
+    }
+
+    //连接发生错误的回调方法
+    websocket.onerror = function () {
+    };
+
+    //连接成功建立的回调方法
+    websocket.onopen = function () {
+    };
+
+    //接收到消息的回调方法
+    websocket.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        var messageType = data.messageType;
+        if (messageType == "online" || messageType == "offline") {
+            updateOnlineUser(messageType, data);
+        } else {
+            setMessageInnerHTML(data.message);
+        }
+    };
+
+    //连接关闭的回调方法
+    websocket.onclose = function () {
+    };
+
+    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+    window.onbeforeunload = function () {
+        websocket.close();
+    };
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+        // closeWindow();
+    }
+
+    //发送消息
+    function send() {
+        var message = document.getElementById('text').value;
+        if (message != null && message != "") {
+            var to = Number($("#onLineUsers").val());
+            var sendMessage = {to: to, message: message};
+            var jsonSendMessage = JSON.stringify(sendMessage);
+            websocket.send(jsonSendMessage);
+            $("#text").val("").focus(); // 清空并获得焦点
+        }
+    }
+
+    function closeWindow() {
+        var browserName = navigator.appName;
+        if (browserName == "Netscape") {
+            window.location.href = "about:blank";//关键是这句话
+            window.close();
+        } else if (browserName == "Microsoft Internet Explorer") {
+            window.opener = null;
+            window.close();
+        }
+    }
+
+    function updateOnlineUser(messageType, data) {
+        var users = data.users;
+        var state = "在线";
+        if (messageType == "offline") {
+            state = "离线";
+            users = getArrDifference2(chatRoomUser, users);
+            // users = getArrDifference(chatRoomUser,users);
+        }
+        $("#onLineUsers").html('<option value="-1">All</option>');
+        $.each(users, function (index, value) {
+            var id = value.id;
+            var name = value.name;
+            $("#" + id).html(name + ': ' + state);
+            if (id == userId) {
+            } else {
+                $("#onLineUsers").append('<option value=' + id + '>' + name + '</option>');
+            }
+        });
+        setMessageInnerHTML(data.message);
+    }
+
+    /**
+     * 取出两个数组中不同的元素生成一个新的数组
+     * @param arr1
+     * @param arr2
+     * @returns {T[]}
+     */
+    function getArrDifference(arr1, arr2) {
+        return arr1.concat(arr2).filter(function (v, i, arr) {
+            return arr.indexOf(v) === arr.lastIndexOf(v);
+        });
+    }
+
+    function getArrDifference2(arr1, arr2) {
+        var arr3 = [];
+        for (key in arr1) {
+            var stra = arr1[key];
+            var count = 0;
+            for (var j = 0; j < arr2.length; j++) {
+                var strb = arr2[j];
+                if (stra.id == strb.id) {
+                    count++;
+                }
+            }
+            if (count === 0) { //表示数组1的这个值没有重复的，放到arr3列表中
+                arr3.push(stra);
+            }
+        }
+        return arr3;
+    }
+
+    /**
+     * 判断对象内容是否相同
+     * @param a
+     * @param b
+     * @returns {boolean}
+     */
+    function isObjectValueEqual(a, b) {
+        var aProps = Object.getOwnPropertyNames(a);
+        var bProps = Object.getOwnPropertyNames(b);
+        if (aProps.length != bProps.length) {
+            return false;
+        }
+        for (var i = 0; i < aProps.length; i++) {
+            var propName = aProps[i]
+
+            var propA = a[propName]
+            var propB = b[propName]
+            if (propA !== propB) {
+                if ((typeof (propA) === 'object')) {
+                    if (this.isObjectValueEqual(propA, propB)) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        return true;
+    }
+</script>
+</html>
