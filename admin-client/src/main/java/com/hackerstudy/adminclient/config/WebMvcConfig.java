@@ -15,29 +15,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-	/**
-	 * 自定义视图映射
-	 * @param registry
-	 */
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
+    /**
+     * 自定义视图映射
+     *
+     * @param registry
+     */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
 //		super.addViewControllers(registry);
         //将thymeleaf_index请求解析到thymeleaf的主页
-		registry.addViewController("/thymeleafIndex")
+        registry.addViewController("/thymeleafIndex")
                 .setViewName("/thymeleaf/thymeleaf_index");
-		registry.addViewController("/main")
-				.setViewName("/thymeleaf/employees/dashboard");
-	}
+        registry.addViewController("/main")
+                .setViewName("/thymeleaf/employees/dashboard");
+    }
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		/**
-		 * 拦截器按照顺序执行
-		 */
-		registry.addInterceptor(new TwoInterceptor()).addPathPatterns("/two/**")
-													 .addPathPatterns("/one/**");
-		registry.addInterceptor(new OneInterceptor()).addPathPatterns("/one/**");
-		//registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/login","/employees/login","swagger-ui.html");
-	}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        /**
+         * 拦截器按照顺序执行
+         */
+        registry.addInterceptor(new TwoInterceptor()).addPathPatterns("/two/**")
+                .addPathPatterns("/one/**");
+        registry.addInterceptor(new OneInterceptor()).addPathPatterns("/one/**");
+        //registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/login","/employees/login","swagger-ui.html");
+    }
 
 }

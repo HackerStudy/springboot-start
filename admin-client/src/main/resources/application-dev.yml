@@ -74,7 +74,16 @@ spring:
       min-idle: 500 # 连接池的最小空闲链接
     timeout: 1000 # 连接超时时间（毫秒）
     testOnBorrow: true
-
+  boot:
+    admin:
+      client:
+        url: http://localhost:8082
+        username: admin
+        password: 123456
+        instance:
+          name: admin-client
+          #client地址
+          service-base-url: http://localhost:${server.port}
 #########################
 #
 # mybatis的配置
