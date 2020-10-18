@@ -6,7 +6,7 @@ spring:
   #测试环境和生产环境之间的配置文件的切换
   profiles:
     active: @profileActive@
-#    active: dev
+#    active: qa
   application:
     name: admin-client
   devtools:
