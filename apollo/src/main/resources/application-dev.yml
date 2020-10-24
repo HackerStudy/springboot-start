@@ -1,0 +1,14 @@
+#######################
+# spring相关的配置
+#######################
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8082
+        username: admin
+        password: 123456
+        instance:
+          name: apollo
+          #client访问地址
+          service-base-url: http://localhost:${server.port}

@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: xxl-job
+  profiles:
+    active: dev
+  devtools:
+    livereload:
+      port: 35733
+  thymeleaf:
+    checkTemplateLocation: false
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
