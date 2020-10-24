@@ -1,8 +1,8 @@
-FROM java:8
+FROM openjdk:8-jre-slim
 MAINTAINER hackerstudy <1791133899@qq.com>
 ENV TZ='Asia/Shanghai'
 WORKDIR /home/server/
-ADD target/admin-client2.jar /home/server/app.jar
+ADD admin-client2.jar /home/server/app.jar
 VOLUME /home/server
 ENV JAVA_OPTS="-Dfile.encoding=UTF-8"
 EXPOSE 8081

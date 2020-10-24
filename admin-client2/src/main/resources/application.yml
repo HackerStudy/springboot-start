@@ -1,19 +1,11 @@
 spring:
   application:
     name: admin-client2
+  profiles:
+    active: qa
   devtools:
     livereload:
       port: 35732
-  boot:
-    admin:
-      client:
-        url: http://localhost:8082
-        username: admin
-        password: 123456
-        instance:
-          name: admin-client2
-          #client访问地址
-          service-base-url: http://localhost:${server.port}
   thymeleaf:
     checkTemplateLocation: false
 server:
