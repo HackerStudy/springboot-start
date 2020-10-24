@@ -58,7 +58,7 @@
 
 	<build>
 		<!-- 指定生成jar包名称 -->
-		<finalName>admin-client2</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
