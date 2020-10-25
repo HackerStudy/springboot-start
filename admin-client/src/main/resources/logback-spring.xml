@@ -68,9 +68,7 @@
     <!-- 4.1 开发环境:打印控制台-->
     <springProfile name="dev">
         <logger name="com.hackerstudy.adminclient" level="debug"/>
-
 <!--        <appender-ref ref="CONSOLE" />-->
-<!--        <appender-ref ref="INFO_FILE" />-->
     </springProfile>
     <springProfile name="qa">
         <property name="log.path" value="logs/" />
@@ -205,32 +203,9 @@
         </appender>
     </springProfile>
 
-    <!--测试环境将不同的级别输出到同一个文件中-->
-<!--    <root level="debug">-->
-<!--        <appender-ref ref="CONSOLE" />-->
-<!--        <appender-ref ref="DEV_DEBUG_FILE" />-->
-<!--    </root>-->
-
     <!--指定最基础的日志输出级别-->
     <root level="debug">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="DEBUG_FILE" />
-        <appender-ref ref="INFO_FILE" />
-        <appender-ref ref="WARN_FILE" />
-        <appender-ref ref="ERROR_FILE" />
     </root>
-
-<!--   4.2 生产环境:输出到文档-->
-<!--    <springProfile name="pro">-->
-<!--            <property name="log.path" value="../logs/" />-->
-<!--            <property name="logPath" value="../logs/" />-->
-<!--        <root level="info">-->
-<!--            <appender-ref ref="CONSOLE" />-->
-<!--            <appender-ref ref="DEBUG_FILE" />-->
-<!--            <appender-ref ref="INFO_FILE" />-->
-<!--            <appender-ref ref="ERROR_FILE" />-->
-<!--            <appender-ref ref="WARN_FILE" />-->
-<!--        </root>-->
-<!--    </springProfile>-->
 
 </configuration>

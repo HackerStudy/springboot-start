@@ -65,6 +65,8 @@
         <cxf-spring-boot-starter-jaxws.version>3.2.1</cxf-spring-boot-starter-jaxws.version>
         <xxl-job-core.version>2.1.2</xxl-job-core.version>
         <apollo-client.version>1.1.0</apollo-client.version>
+        <easyexcel.version>2.2.6</easyexcel.version>
+        <spring-boot-admin-starter-client.version>2.2.1</spring-boot-admin-starter-client.version>
     </properties>
 
     <!--dependencyManagement用于管理依赖版本号-->
@@ -237,6 +239,18 @@
                 <version>${cxf-spring-boot-starter-jaxws.version}</version>
             </dependency>
             <!-- CXF webservice -->
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin-starter-client.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
