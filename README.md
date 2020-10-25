@@ -71,3 +71,7 @@
 + springboot整合security
 + springboot整合mail
 + springboot整合springbootAdmin
++ springboot整合docker和alibaba cloud toolkit部署，并编写好部署脚本
++ springboot整合xxl-job分布式定时任务
++ springboot整合apollo作为配置中心
++ springboot整合easyExcel作为excel的处理插件

@@ -251,6 +251,12 @@
                 <artifactId>spring-boot-admin-starter-client</artifactId>
                 <version>${spring-boot-admin-starter-client.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${apollo-client.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
