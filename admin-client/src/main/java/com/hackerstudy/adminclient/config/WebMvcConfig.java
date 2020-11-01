@@ -1,6 +1,7 @@
 package com.hackerstudy.adminclient.config;
 
 import com.hackerstudy.adminclient.HandlerInterceptor.OneInterceptor;
+import com.hackerstudy.adminclient.HandlerInterceptor.ResponseResultInterceptor;
 import com.hackerstudy.adminclient.HandlerInterceptor.TwoInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 使用WebMvcConfigurerAdapter可以来拓展springmvc的功能
+ * @author 17911
  */
 //全面接管springmvc的配置（类似以前的ssm中的springmvc配置文件配置）
 //@EnableWebMvc
@@ -35,6 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         /**
          * 拦截器按照顺序执行
          */
+        registry.addInterceptor(new ResponseResultInterceptor()).addPathPatterns("/user/getUserJson");
         registry.addInterceptor(new TwoInterceptor()).addPathPatterns("/two/**")
                 .addPathPatterns("/one/**");
         registry.addInterceptor(new OneInterceptor()).addPathPatterns("/one/**");

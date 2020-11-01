@@ -1,5 +1,6 @@
 package com.hackerstudy.adminclient.controller.user;
 
+import com.hackerstudy.adminclient.common.annotation.ResponseResult;
 import com.hackerstudy.adminclient.common.vo.JSONResult;
 import com.hackerstudy.adminclient.pojo.User;
 import com.hackerstudy.adminclient.service.IMService;
@@ -40,8 +41,9 @@ public class UserController {
     }
 
     @ApiOperation(value="获取张三的信息(返回json数据)", notes="获取张三的信息(返回json数据)", produces="application/json")
+    @ResponseResult
     @RequestMapping("/getUserJson")
-    public JSONResult<User> getUserJson() {
+    public User getUserJson() {
         User user = new User();
         user.setId(1);
         user.setName("张三");
@@ -49,7 +51,7 @@ public class UserController {
         user.setAge(20);
         user.setBirthday(new Date());
         user.setDesc(null);
-        return JSONResult.ok(user);
+        return user;
     }
 
     @RequestMapping("/testExceptionHandle")
