@@ -2,7 +2,9 @@ package com.hackerstudy.adminclient.controller.excel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.read.metadata.ReadSheet;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.fastjson.JSON;
 import com.hackerstudy.adminclient.dto.ExcelDemoDTO;
 import com.hackerstudy.adminclient.listener.excel.ExcelDemoListener;
@@ -57,9 +59,27 @@ public class ExcelController {
             exportExcelDemoVO.setExaminationDate(new Date());
             exportExcelDemoVO.setTotalFraction(653.21);
             exportExcelDemoVOS.add(exportExcelDemoVO);
+
+            ExcelWriter excelWriter = null;
+            try {
+                // 这里 指定文件
+                excelWriter = EasyExcel.write(response.getOutputStream()).build();
+                // 去调用写入,这里我调用了五次，实际使用时根据数据库分页的总的页数来。这里最终会写到5个sheet里面
+                for (int i = 0; i < 5; i++) {
+                    // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意DemoData.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
+                    WriteSheet writeSheet = EasyExcel.writerSheet(i, "模板" + i).head(ExportExcelDemoVO.class).build();
+                    // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+                    excelWriter.write(exportExcelDemoVOS, writeSheet);
+                }
+            } finally {
+                // 千万别忘记finish 会帮忙关闭流
+                if (excelWriter != null) {
+                    excelWriter.finish();
+                }
+            }
             // 这里需要设置不关闭流
-            EasyExcel.write(response.getOutputStream(), ExportExcelDemoVO.class).autoCloseStream(Boolean.FALSE).sheet("用户考试信息")
-                    .doWrite(exportExcelDemoVOS);
+            //EasyExcel.write(response.getOutputStream(), ExportExcelDemoVO.class).autoCloseStream(Boolean.FALSE).sheet("用户考试信息")
+            //        .doWrite(exportExcelDemoVOS);
         } catch (Exception e) {
             // 重置response
             response.reset();
