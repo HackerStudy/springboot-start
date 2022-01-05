@@ -1,9 +1,12 @@
 package com.hackerstudy.adminclient.pojo.converter;
 
 import com.alibaba.excel.converters.Converter;
+import com.alibaba.excel.converters.ReadConverterContext;
+import com.alibaba.excel.converters.WriteConverterContext;
 import com.alibaba.excel.enums.CellDataTypeEnum;
-import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.metadata.GlobalConfiguration;
+import com.alibaba.excel.metadata.data.CellData;
+import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.hackerstudy.adminclient.enums.SexEnum;
 
@@ -15,7 +18,7 @@ import com.hackerstudy.adminclient.enums.SexEnum;
  */
 public class SexConverter implements Converter<Integer> {
     @Override
-    public Class supportJavaTypeKey() {
+    public Class<?> supportJavaTypeKey() {
         return Integer.class;
     }
 
@@ -25,8 +28,8 @@ public class SexConverter implements Converter<Integer> {
     }
 
     @Override
-    public Integer convertToJavaData(CellData cellData, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        String sexText = cellData.getStringValue();
+    public Integer convertToJavaData(ReadConverterContext<?> context) throws Exception {
+        String sexText = context.getReadCellData().getStringValue();
         Integer sex = null;
         switch (sexText){
             case "男":
@@ -42,9 +45,9 @@ public class SexConverter implements Converter<Integer> {
     }
 
     @Override
-    public CellData convertToExcelData(Integer s, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+    public WriteCellData<?> convertToExcelData(WriteConverterContext<Integer> context) throws Exception {
         String sexText = "";
-        switch (s){
+        switch (context.getValue()){
             case 0:
                 sexText = SexEnum.MAN.getDescription();
                 break;
@@ -54,6 +57,6 @@ public class SexConverter implements Converter<Integer> {
             default:
                 sexText = "";
         }
-        return new CellData(sexText);
+        return new WriteCellData<>(sexText);
     }
 }

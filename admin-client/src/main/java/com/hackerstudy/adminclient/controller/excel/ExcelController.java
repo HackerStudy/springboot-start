@@ -1,7 +1,11 @@
 package com.hackerstudy.adminclient.controller.excel;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.alibaba.fastjson.JSON;
+import com.hackerstudy.adminclient.dto.ExcelDemoDTO;
+import com.hackerstudy.adminclient.listener.excel.ExcelDemoListener;
 import com.hackerstudy.adminclient.vo.ExportExcelDemoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -10,6 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,9 +37,9 @@ public class ExcelController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户id", required = true)}
     )
-    @GetMapping("/excel/exportUserInfo/{userId}")
-    public void exportUserInfo(@PathVariable("userId") Integer userId, HttpServletResponse response) throws IOException {
-        // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+    @GetMapping("/excel/exportUserInfo")
+    public void exportUserInfo(HttpServletResponse response) throws IOException {
+        // 这里注意 使用swagger 会导致各种问题，请直接用浏览器或者用postman
         try {
             response.setContentType("application/vnd.ms-excel");
             response.setCharacterEncoding("utf-8");
@@ -63,5 +70,33 @@ public class ExcelController {
             map.put("message", "下载文件失败" + e.getMessage());
             response.getWriter().println(JSON.toJSONString(map));
         }
+    }
+
+    @PostMapping("upload")
+    @ApiOperation(value="导入excel")
+    @ResponseBody
+    public String upload(MultipartFile file) throws IOException {
+        ExcelReader excelReader = null;
+        try {
+            excelReader = EasyExcel.read(file.getInputStream()).build();
+            ExcelDemoListener oneSheetListener = new ExcelDemoListener();
+            ExcelDemoListener twoSheetListener = new ExcelDemoListener();
+            // 这里为了简单 所以注册了 同样的head 和Listener 自己使用功能必须不同的Listener
+            ReadSheet readSheet1 =
+                    EasyExcel.readSheet(0).head(ExcelDemoDTO.class).registerReadListener(oneSheetListener).headRowNumber(2).build();
+            ReadSheet readSheet2 =
+                    EasyExcel.readSheet(1).head(ExcelDemoDTO.class).registerReadListener(twoSheetListener).headRowNumber(2).build();
+            // 这里注意 一定要把sheet1 sheet2 一起传进去，不然有个问题就是03版的excel 会读取多次，浪费性能
+            excelReader.read(readSheet1, readSheet2);
+            List<ExcelDemoDTO> oneList = oneSheetListener.getCachedDataList();
+            List<ExcelDemoDTO> twoList = twoSheetListener.getCachedDataList();
+            System.out.println("");
+        } finally {
+            if (excelReader != null) {
+                // 这里千万别忘记关闭，读的时候会创建临时文件，到时磁盘会崩的
+                excelReader.finish();
+            }
+        }
+        return "success";
     }
 }
