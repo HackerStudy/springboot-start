@@ -10,12 +10,9 @@ import com.hackerstudy.adminclient.dto.ExcelDemoDTO;
 import com.hackerstudy.adminclient.listener.excel.ExcelDemoListener;
 import com.hackerstudy.adminclient.vo.ExportExcelDemoVO;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,15 +32,12 @@ import java.util.*;
 @Controller
 public class ExcelController {
 
-    @ApiOperation(value="导出用户考试信息Excel", notes="根据用户id导出该用户的考试信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户id", required = true)}
-    )
+    @ApiOperation(value="导出用户考试信息Excel")
     @GetMapping("/excel/exportUserInfo")
     public void exportUserInfo(HttpServletResponse response) throws IOException {
         // 这里注意 使用swagger 会导致各种问题，请直接用浏览器或者用postman
         try {
-            response.setContentType("application/vnd.ms-excel");
+            response.setContentType("application/vnd.ms-excel"); //设置响应类型
             response.setCharacterEncoding("utf-8");
             // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
             String fileName = URLEncoder.encode("用户考试信息", "UTF-8").replaceAll("\\+", "%20");
@@ -62,13 +56,12 @@ public class ExcelController {
 
             ExcelWriter excelWriter = null;
             try {
-                // 这里 指定文件
                 excelWriter = EasyExcel.write(response.getOutputStream()).build();
-                // 去调用写入,这里我调用了五次，实际使用时根据数据库分页的总的页数来。这里最终会写到5个sheet里面
+                // 去调用写入,这里我调用了五次-模拟5个sheet，这里最终会写到5个sheet里面
                 for (int i = 0; i < 5; i++) {
-                    // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意DemoData.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
+                    // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意ExportExcelDemoVO.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
                     WriteSheet writeSheet = EasyExcel.writerSheet(i, "模板" + i).head(ExportExcelDemoVO.class).build();
-                    // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+                    //写入
                     excelWriter.write(exportExcelDemoVOS, writeSheet);
                 }
             } finally {
@@ -77,9 +70,6 @@ public class ExcelController {
                     excelWriter.finish();
                 }
             }
-            // 这里需要设置不关闭流
-            //EasyExcel.write(response.getOutputStream(), ExportExcelDemoVO.class).autoCloseStream(Boolean.FALSE).sheet("用户考试信息")
-            //        .doWrite(exportExcelDemoVOS);
         } catch (Exception e) {
             // 重置response
             response.reset();
